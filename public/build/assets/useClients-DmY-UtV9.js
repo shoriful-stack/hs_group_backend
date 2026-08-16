@@ -1,0 +1,1 @@
+import{a as r,u as t}from"./main-B-0ofnOh.js";const s=async()=>{try{return(await r.get("/customers")).data.data}catch(e){return console.error("Fetch Error: ",e.message),{data:[]}}},n=()=>t({queryKey:["clients"],queryFn:()=>s(),staleTime:1e3*60*60});export{n as u};

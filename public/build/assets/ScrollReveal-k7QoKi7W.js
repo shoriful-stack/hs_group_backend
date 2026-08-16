@@ -1,0 +1,1 @@
+import{r as s,j as a,m as e}from"./main-B-0ofnOh.js";import{u as m}from"./use-in-view-CdNTvaLR.js";const u=({children:i,delay:o=0,className:r=""})=>{const t=s.useRef(null),n=m(t,{once:!0,margin:"-60px"});return a.jsx(e.div,{ref:t,initial:{opacity:0,y:30},animate:n?{opacity:1,y:0}:{},transition:{duration:.5,delay:o},className:r,children:i})};export{u as S};

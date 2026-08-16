@@ -1,0 +1,1 @@
+import{a as r,u as t}from"./main-B-0ofnOh.js";const a=async()=>{try{return(await r.get("/awards")).data.data}catch(e){return console.error("Fetch Error: ",e.message),{data:[]}}},c=()=>t({queryKey:["certificates"],queryFn:()=>a(),staleTime:1e3*60*60});export{c as u};
