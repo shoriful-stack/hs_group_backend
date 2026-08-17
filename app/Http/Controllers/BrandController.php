@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomClass\Helper;
 use App\CustomClass\ReturnMessage;
+use App\Http\Controllers\API\V1\HomePageController;
 use App\DataTables\BrandDataTable;
 use App\Enums\Status;
 use App\Models\Brand;
@@ -64,6 +65,7 @@ class BrandController extends Controller
             $brand->save();
 
             Cache::forget('brands');
+            HomePageController::forgetCache();
             DB::commit();
             return ReturnMessage::insertSuccess();
         } catch (QueryException $exp) {
@@ -122,6 +124,7 @@ class BrandController extends Controller
             $brand->save();
 
             Cache::forget('brands');
+            HomePageController::forgetCache();
 
             DB::commit();
             return ReturnMessage::updateSuccess();
@@ -139,6 +142,7 @@ class BrandController extends Controller
         try {
             $brand->delete();
             Cache::forget('brands');
+            HomePageController::forgetCache();
             return ReturnMessage::deleteSuccess();
         } catch (QueryException $e) {
             return ReturnMessage::customMessage('error', $e->getMessage());

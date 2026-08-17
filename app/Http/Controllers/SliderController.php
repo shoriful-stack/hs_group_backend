@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CustomClass\Helper;
 use App\CustomClass\ReturnMessage;
 use App\DataTables\SliderDataTable;
+use App\Http\Controllers\API\V1\HomePageController;
 use App\Http\Requests\SliderRequest;
 use App\Models\Language;
 use App\Models\Slider;
@@ -48,6 +49,7 @@ class SliderController extends Controller {
             ] );
 
             Cache::forget('sliders');
+            HomePageController::forgetCache();
             DB::commit();
             return ReturnMessage::insertSuccess();
 
@@ -90,6 +92,7 @@ class SliderController extends Controller {
             ] );
             
             Cache::forget('sliders');
+            HomePageController::forgetCache();
             DB::commit();
             return ReturnMessage::updateSuccess();
 

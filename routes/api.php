@@ -4,6 +4,7 @@ use App\Http\Controllers\API\V1\AboutUsController;
 use App\Http\Controllers\API\V1\BlogController;
 use App\Http\Controllers\API\V1\ContactInquiryController;
 use App\Http\Controllers\API\V1\HomeController;
+use App\Http\Controllers\API\V1\HomePageController;
 use App\Http\Controllers\API\V1\MessagingController;
 use App\Http\Controllers\API\V1\ProductCategoryController;
 use App\Http\Controllers\API\V1\ProductController;
@@ -53,6 +54,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/customers', [HomeController::class, 'customer']);
     Route::get('/awards', [HomeController::class, 'award']);
     Route::get('/sliders', [HomeController::class, 'slider']);
+    Route::get('/home/static-data', [HomePageController::class, 'staticData']);
 
     Route::post('/contact-inquiries', [ContactInquiryController::class, 'store']);
     Route::post('/quotations', [ContactInquiryController::class, 'quotation']);

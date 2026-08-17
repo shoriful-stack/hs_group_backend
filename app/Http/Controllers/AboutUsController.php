@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomClass\Helper;
 use App\CustomClass\ReturnMessage;
+use App\Http\Controllers\API\V1\HomePageController;
 use App\Http\Requests\AboutUsRequest;
 use App\Models\AboutUs;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +51,7 @@ class AboutUsController extends Controller
         );
 
         Cache::forget('about_us');
+        HomePageController::forgetCache();
 
         return ReturnMessage::updateSuccess();
     }

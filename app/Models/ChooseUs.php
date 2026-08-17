@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ChooseUs extends Model {
     use UserStamps, HasBranchScope, SoftDeletes;
+    protected $table = 'choose_us';
     protected $guarded = ['id'];
     protected $casts = ['features' => 'array'];
 

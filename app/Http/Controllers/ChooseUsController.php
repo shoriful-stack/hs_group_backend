@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomClass\Helper;
 use App\CustomClass\ReturnMessage;
+use App\Http\Controllers\API\V1\HomePageController;
 use App\Http\Requests\ChooseUsRequest;
 use App\Models\ChooseUs;
 use App\Models\Language;
@@ -42,6 +43,8 @@ class ChooseUsController extends Controller {
                 'language_id' => $request->language_id,
             ]
         );
+
+        HomePageController::forgetCache();
 
         return ReturnMessage::updateSuccess();
     }

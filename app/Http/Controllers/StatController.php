@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomClass\ReturnMessage;
 use App\DataTables\StatDataTable;
+use App\Http\Controllers\API\V1\HomePageController;
 use App\Http\Requests\StatRequest;
 use App\Models\Stat;
 use Illuminate\Database\QueryException;
@@ -43,6 +44,7 @@ class StatController extends Controller
                 'serial_no'   => $request->serial_no,
             ]);
             Cache::forget('stats');
+            HomePageController::forgetCache();
             DB::commit();
             return ReturnMessage::insertSuccess();
         } catch (QueryException $e) {
@@ -83,6 +85,7 @@ class StatController extends Controller
             ]);
 
             Cache::forget('stats');
+            HomePageController::forgetCache();
 
             DB::commit();
             return ReturnMessage::updateSuccess();
@@ -99,6 +102,7 @@ class StatController extends Controller
     {
         $stat->delete();
         Cache::forget('stats');
+        HomePageController::forgetCache();
         return ReturnMessage::deleteSuccess();
     }
 }
