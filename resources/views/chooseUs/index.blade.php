@@ -30,20 +30,6 @@
                                     Language & Title
                                 </h5>
                                 <div class="row g-4 mb-2">
-                                    <div class="col-md-6">
-                                        <div class="input-group-modern">
-                                            <label class="form-label form-label-modern">{{ __('Language') }}</label>
-                                            <i class="bx bx-world input-icon"></i>
-                                            <select name="language_id" id="language_id" class="form-control" required>
-                                                @foreach($languages as $id => $name)
-                                                <option value="{{ $id }}"
-                                                    {{ old('language_id', $data->language_id ?? '') == $id ? 'selected' : '' }}>
-                                                    {{ $name }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
 
                                     <div class="col-md-6">
                                         <div class="input-group-modern">
@@ -87,7 +73,16 @@
 
                                 <div id="featuresWrapper">
                                     @php
-                                    $features = old('features', !empty($data->features) ? json_decode($data->features, true) : []);
+                                    $rawFeatures = old('features', $data->features ?? []);
+                                    if (is_string($rawFeatures)) {
+                                        $decoded = json_decode($rawFeatures, true);
+                                        if (is_string($decoded)) {
+                                            $decoded = json_decode($decoded, true);
+                                        }
+                                        $features = is_array($decoded) ? $decoded : [];
+                                    } else {
+                                        $features = is_array($rawFeatures) ? $rawFeatures : [];
+                                    }
                                     @endphp
 
                                     @if(!empty($features) && is_array($features))
@@ -116,6 +111,21 @@
                                             <textarea name="features[{{ $index }}][short_description]"
                                                 class="form-control form-control-sm feature-note"
                                                 placeholder="{{ __('Enter short description') }}">{{ $feature['short_description'] ?? '' }}</textarea>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label>{{ __('Image') }}</label>
+                                            <input type="file"
+                                                name="features[{{ $index }}][image]"
+                                                class="form-control form-control-sm"
+                                                accept="image/*">
+                                            @if(!empty($feature['image']))
+                                            <input type="hidden" name="features[{{ $index }}][existing_image]" value="{{ $feature['image'] }}">
+                                            <div class="mt-2">
+                                                <img src="{{ asset($feature['image']) }}" alt="" height="72" class="rounded">
+                                                <small class="text-muted d-block">{{ __('Current image') }}</small>
+                                            </div>
+                                            @endif
                                         </div>
 
                                         <button type="button" class="btn btn-danger btn-sm w-100 remove-feature">
@@ -228,6 +238,10 @@
                 <label>Short Description</label>
                 <textarea name="features[${featureIndex}][short_description]" class="form-control form-control-sm feature-note"
                           placeholder="Enter short description"></textarea>
+            </div>
+            <div class="mb-2">
+                <label>Image</label>
+                <input type="file" name="features[${featureIndex}][image]" class="form-control form-control-sm" accept="image/*">
             </div>
             <button type="button" class="btn btn-danger btn-sm w-100 remove-feature">
                 <i class="bx bx-trash"></i> Remove

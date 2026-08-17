@@ -245,11 +245,16 @@
                   </a>
                   <ul>
 
-                      
-                  @can('All Home Settings')
+                      {{--                   @can('All Home Settings')
                       <li class="{{ request()->routeIs('homeSettings.*') ? 'mm-active' : '' }}"> <a
                               href="{{ route('homeSettings.index') }}"><i class="bi bi-arrow-right-short"></i>Home
                               Settings</a></li>
+                              @endcan
+                             
+                              @can('All Slider Settings') --}}
+                  @can('All Home Settings')
+                      <li class="{{ request()->routeIs('chooseUs.*') ? 'mm-active' : '' }}"> <a
+                              href="{{ route('chooseUs.index') }}"><i class="bi bi-arrow-right-short"></i>Choose Us</a></li>
                               @endcan
                              
                               @can('All Slider Settings')

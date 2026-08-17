@@ -27,6 +27,8 @@ class ChooseUsRequest extends FormRequest {
             'features.*.icon'              => ['nullable', 'string', 'max:255'],
             'features.*.title'             => ['required_with:features', 'string', 'max:255'],
             'features.*.short_description' => ['nullable', 'string'],
+            'features.*.image'             => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,svg,webp', 'max:2048'],
+            'features.*.existing_image'    => ['nullable', 'string'],
         ];
     }
 }
