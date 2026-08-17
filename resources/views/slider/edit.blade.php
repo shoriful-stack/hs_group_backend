@@ -60,6 +60,17 @@
             @endif
         </div>
 
+        <div class="form-group col-md-6 mb-2">
+            <label class="control-label" for="video">{{ __('Video') }}</label>
+            <input type="file" name="video" id="video" class="form-control" accept="video/mp4,video/webm,video/quicktime">
+            <small class="text-muted">
+                {{ __('Optional. MP4/WebM, max 50MB. Leave empty to keep current video.') }}
+            </small>
+            @if($slider->video)
+                <video class="mt-2" width="180" muted playsinline controls src="{{ asset($slider->video) }}"></video>
+            @endif
+        </div>
+
 
         <div class="form-group col-md-6 mb-2">
             <label class="control-label">{{ __('Status') }}</label>

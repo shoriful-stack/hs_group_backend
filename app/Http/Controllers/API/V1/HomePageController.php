@@ -50,6 +50,7 @@ class HomePageController
                             'sub_title',
                             'sub_content',
                             'image',
+                            'video',
                             'url',
                             'serial_no'
                         )
@@ -61,6 +62,7 @@ class HomePageController
                     'sub_title'   => $row->sub_title,
                     'sub_content' => $row->sub_content,
                     'image'       => $row->image,
+                    'video'       => $row->video ?? null,
                     'url'         => $row->url,
                     'serial_no'   => (int) $row->serial_no,
                 ])->values()->all(),
@@ -137,7 +139,7 @@ class HomePageController
     }
 
     /**
-     * @return list<array{icon: ?string, title: string, short_description: ?string}>
+     * @return list<array{icon: ?string, title: string, short_description: ?string, image: ?string}>
      */
     private function mapFeatures(mixed $raw): array
     {
@@ -166,11 +168,13 @@ class HomePageController
                 }
 
                 $description = $item['short_description'] ?? $item['description'] ?? null;
+                $image = $item['image'] ?? null;
 
                 return [
                     'icon'              => isset($item['icon']) ? (string) $item['icon'] : null,
                     'title'             => $title,
                     'short_description' => is_string($description) ? $description : null,
+                    'image'             => is_string($image) && $image !== '' ? $image : null,
                 ];
             })
             ->filter()

@@ -37,6 +37,15 @@ class SliderController extends Controller {
                 $image = '/assets/images/default-slider.png';
             }
 
+            $video = null;
+            if ( $request->hasFile( 'video' ) ) {
+                $video = Helper::documentUpload(
+                    $request->file( 'video' ),
+                    'slider_video_' . uniqid(),
+                    'sliders/videos'
+                );
+            }
+
             Slider::create( [
                 'language_id' => $request->language_id ?? 1,
                 'title'       => $request->title,
@@ -44,6 +53,7 @@ class SliderController extends Controller {
                 'sub_title'   => $request->sub_title,
                 'sub_content' => $request->sub_content,
                 'image'       => $image,
+                'video'       => $video,
                 'url'         => $request->url,
                 'serial_no'   => $request->serial_no,
             ] );
@@ -79,6 +89,16 @@ class SliderController extends Controller {
                 $image = $slider->image ?? '/assets/images/default-slider.png';
             }
 
+            $video = $slider->video;
+            if ( $request->hasFile( 'video' ) ) {
+                $video = Helper::documentUpload(
+                    $request->file( 'video' ),
+                    'slider_video_' . uniqid(),
+                    'sliders/videos',
+                    $slider->video
+                );
+            }
+
             $slider->update( [
                 'language_id' => $request->language_id ?? 1,
                 'title'       => $request->title,
@@ -86,6 +106,7 @@ class SliderController extends Controller {
                 'sub_title'   => $request->sub_title,
                 'sub_content' => $request->sub_content,
                 'image'       => $image,
+                'video'       => $video,
                 'url'         => $request->url,
                 'serial_no'   => $request->serial_no,
                 'status'      => $request->status,

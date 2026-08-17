@@ -27,6 +27,7 @@ class SliderRequest extends FormRequest {
             'sub_title'   => ['nullable', 'string'],
             'sub_content' => ['nullable', 'string'],
             'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'video'       => ['nullable', 'file', 'mimetypes:video/mp4,video/webm,video/quicktime', 'max:51200'],
             'url'         => ['nullable', 'url'],
             'serial_no'   => ['required', 'numeric'],
             'status'      => [new Enum( Status::class )],

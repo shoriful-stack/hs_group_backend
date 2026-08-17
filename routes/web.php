@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ChooseUsController;
 use App\Http\Controllers\CKEditorUploadService;
 use App\Http\Controllers\ContactInquiryController;
 use App\Http\Controllers\ContactUsController;
@@ -75,7 +76,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource('languages', LanguageController::class);
     Route::resource('aboutUs', AboutUsController::class);
     Route::resource('iot', IotSolutionController::class);
-    // Route::resource('chooseUs', ChooseUsController::class);
+    Route::resource('chooseUs', ChooseUsController::class);
     Route::resource('contactUs', ContactUsController::class);
     Route::resource('contactInquiries', ContactInquiryController::class);
     Route::resource('quotations', QuotationController::class);

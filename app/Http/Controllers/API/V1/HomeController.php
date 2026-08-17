@@ -20,6 +20,7 @@ class HomeController
                     'sub_title',
                     'sub_content',
                     'image',
+                    'video',
                     'serial_no'
                 )
                 ->get();

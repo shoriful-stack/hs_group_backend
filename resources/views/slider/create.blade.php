@@ -51,6 +51,14 @@
                 {{ __('Recommended size: 1920 x 900px, Max file size: 100kb') }}
             </small>
         </div>
+
+        <div class="form-group col-md-6 mb-2">
+            <label for="video" class="control-label">{{ __('Video') }}</label>
+            <input type="file" name="video" id="video" class="form-control" accept="video/mp4,video/webm,video/quicktime">
+            <small class="text-muted">
+                {{ __('Optional. MP4/WebM, max 50MB. Image is used as poster.') }}
+            </small>
+        </div>
     </div>
 
     <div class="modal-footer mt-1">
