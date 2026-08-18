@@ -20,6 +20,7 @@ class AboutUs extends Model {
     protected $casts = [
         'status' => Status::class,
         'type'   => AboutUsType::class,
+        'images' => 'array',
     ];
     public function language(){
         return $this->belongsTo(Language::class);

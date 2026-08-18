@@ -28,7 +28,8 @@ class AboutUsRequest extends FormRequest
             ],
             'language_id' => ['nullable', 'numeric'],
             'contents' => ['nullable', 'string'],
-            'image'       => ['nullable', 'file', 'mimes:jpeg,jpg,png,webp', 'max:2024'],
+            'images'   => ['nullable', 'array', 'max:4'],
+            'images.*' => ['nullable', 'file', 'mimes:jpeg,jpg,png,webp', 'max:2024'],
         ];
     }
 }

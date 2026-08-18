@@ -51,21 +51,33 @@
                                             <textarea name="contents" id="contents" rows="5" class="form-control">{{ old('content', $data->content ?? '') }}</textarea>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="input-group-modern">
-                                            <label
-                                                class="form-label form-label-modern" for="image">{{ __('Image') }}</label> <span class="text-danger">*</span>
-                                            <input type="file" name="image" class="form-control" id="image" accept="image/*">
-                                            <small class="text-muted text-danger">
-                                                {{ __('Recommended size: 630 x 400px, Max file size: 200KB') }}
-                                            </small>
-                                            @if(!empty($data->image))
-                                            <div class="image-preview mt-2">
-                                                <img src="{{ asset( $data->image) }}"
-                                                    height="100" alt="About Us Image" class="rounded">
-                                                <small class="text-muted d-block mt-1">Current image</small>
+                                    <div class="col-md-12">
+                                        <div class="row g-3">
+                                            @php
+                                                $collageImages = is_array($data->images ?? null) ? array_values($data->images) : [];
+                                                if ($collageImages === [] && !empty($data->image)) {
+                                                    $collageImages = [$data->image];
+                                                }
+                                            @endphp
+                                            @for($i = 0; $i < 4; $i++)
+                                            <div class="col-md-6 col-lg-3">
+                                                <div class="input-group-modern">
+                                                    <label class="form-label form-label-modern" for="images_{{ $i }}">
+                                                        {{ __('Collage Image') }} {{ $i + 1 }}
+                                                    </label>
+                                                    <input type="file" name="images[{{ $i }}]" class="form-control" id="images_{{ $i }}" accept="image/*">
+                                                    <small class="text-muted text-danger">
+                                                        {{ __('Recommended size: 630 x 400px, Max file size: 2MB') }}
+                                                    </small>
+                                                    @if(!empty($collageImages[$i]))
+                                                    <div class="image-preview mt-2">
+                                                        <img src="{{ asset($collageImages[$i]) }}" height="80" alt="Collage image {{ $i + 1 }}" class="rounded">
+                                                        <small class="text-muted d-block mt-1">Current image</small>
+                                                    </div>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            @endif
+                                            @endfor
                                         </div>
                                     </div>
                                 </div>
