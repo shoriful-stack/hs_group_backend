@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Status;
+use App\Services\LayoutDataService;
 use App\Traits\UserStamps;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -88,5 +89,7 @@ class Service extends Model
         } else {
             Cache::increment('services_cache_version');
         }
+
+        LayoutDataService::forgetCache();
     }
 }

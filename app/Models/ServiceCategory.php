@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Status;
+use App\Services\LayoutDataService;
 use App\Traits\UserStamps;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Sluggable\HasSlug;
@@ -33,5 +34,11 @@ class ServiceCategory extends Model
     public function services()
     {
         return $this->hasMany(Service::class, 'category_id');
+    }
+
+    protected static function booted()
+    {
+        static::saved(fn () => LayoutDataService::forgetCache());
+        static::deleted(fn () => LayoutDataService::forgetCache());
     }
 }
