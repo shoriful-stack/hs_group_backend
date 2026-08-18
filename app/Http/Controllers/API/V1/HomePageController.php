@@ -126,11 +126,13 @@ class HomePageController
                         ->select('id', 'title', 'image', 'content')
                         ->get();
                 })->map(fn ($row) => [
-                    'id'      => $row->id,
-                    'name'    => $row->title,
-                    'logo'    => $row->image,
-                    'content' => $row->content,
-                ])->values()->all(),
+                    'id'      => $row->id ?? null,
+                    'name'    => $row->title ?? null,
+                    'logo'    => $row->image ?? null,
+                    'content' => $row->content ?? null,
+                ])->filter(fn ($row) => is_string($row['name']) && $row['name'] !== '')
+                    ->values()
+                    ->all(),
 
                 'general_settings' => $settings ? [
                     'id'          => $settings->id,
