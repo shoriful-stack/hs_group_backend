@@ -1,1 +1,0 @@
-import{a as s,u as a}from"./main-B-0ofnOh.js";const u=async e=>{try{return(await s.get("/products",{params:e})).data}catch(r){return console.error("Fetch Error: ",r.message),{data:[]}}},c=e=>{const{enabled:r=!0,...t}=e??{};return a({queryKey:["products",t],queryFn:()=>u(t),enabled:r,keepPreviousData:!0,staleTime:1e3*60*60})};export{c as u};
