@@ -8,7 +8,7 @@ use Throwable;
 
 class HomePageController
 {
-    public const CACHE_KEY = 'home_static_data';
+    public const CACHE_KEY = 'home_static_data_v2';
     public const CACHE_TTL = 86400;
 
     public function staticData()
@@ -36,6 +36,34 @@ class HomePageController
                     ->select('title', 'content', 'image', 'features')
                     ->first();
             });
+
+            $settings = $this->safeFirst(function () {
+                return DB::table('general_settings')
+                    ->select(
+                        'id',
+                        'title',
+                        'favicon',
+                        'logo_header',
+                        'logo_footer',
+                        'description',
+                        'keywords'
+                    )
+                    ->first();
+            });
+
+            $contact = $this->safeCollect(function () {
+                return DB::table('contact_us')
+                    ->select(
+                        'id',
+                        'address',
+                        'primary_phone',
+                        'secondary_phone',
+                        'primary_email',
+                        'secondary_email',
+                        'whatsapp_number'
+                    )
+                    ->get();
+            })->first();
 
             return [
                 'hero' => $this->safeCollect(function () {
@@ -87,7 +115,7 @@ class HomePageController
                     ])->values()->all(),
                 ],
 
-                'features' => $this->mapFeatures($chooseUs->features ?? null),
+                'features' => $this->mapFeatures($chooseUs?->features ?? null),
 
                 'partners' => $this->safeCollect(function () {
                     return DB::table('brands')
@@ -100,6 +128,36 @@ class HomePageController
                     'name'    => $row->title,
                     'logo'    => $row->image,
                     'content' => $row->content,
+                ])->values()->all(),
+
+                'general_settings' => $settings ? [
+                    'id'          => $settings->id,
+                    'title'       => $settings->title,
+                    'favicon'     => $settings->favicon,
+                    'logo_header' => $settings->logo_header,
+                    'logo_footer' => $settings->logo_footer,
+                    'description' => $settings->description,
+                    'keywords'    => $settings->keywords,
+                ] : null,
+
+                'contact_us' => $contact ? [
+                    'id'               => $contact->id,
+                    'address'          => $contact->address,
+                    'primary_phone'    => $contact->primary_phone,
+                    'secondary_phone'  => $contact->secondary_phone,
+                    'primary_email'    => $contact->primary_email,
+                    'secondary_email'  => $contact->secondary_email,
+                    'whatsapp_number'  => $contact->whatsapp_number,
+                ] : null,
+
+                'social_links' => $this->safeCollect(function () {
+                    return DB::table('social_links')
+                        ->select('id', 'icon', 'link')
+                        ->get();
+                })->map(fn ($row) => [
+                    'id'   => $row->id,
+                    'icon' => $row->icon,
+                    'link' => $row->link,
                 ])->values()->all(),
             ];
         });
