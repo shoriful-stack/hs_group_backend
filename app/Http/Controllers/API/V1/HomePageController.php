@@ -4,31 +4,33 @@ namespace App\Http\Controllers\API\V1;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 class HomePageController
 {
-    public const CACHE_KEY = 'home_static_data_v2';
+    public const CACHE_KEY = 'home_static_data_v3';
     public const CACHE_TTL = 86400;
 
     public function staticData()
     {
         $payload = Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
             $aboutRows = $this->safeCollect(function () {
+                $columns = ['id', 'title', 'content', 'image', 'serial_no'];
+                if (Schema::hasColumn('about_us', 'images')) {
+                    $columns[] = 'images';
+                }
+
                 return DB::table('about_us')
                     ->whereNull('deleted_at')
                     ->where('status', 1)
                     ->orderBy('serial_no')
-                    ->select('id', 'title', 'content', 'image', 'serial_no')
+                    ->select($columns)
                     ->get();
             });
 
             $about = $aboutRows->first();
-            $images = $aboutRows
-                ->pluck('image')
-                ->filter()
-                ->values()
-                ->all();
+            $images = $this->collageImages($about, $aboutRows);
 
             $chooseUs = $this->safeFirst(function () {
                 return DB::table('choose_us')
@@ -96,9 +98,9 @@ class HomePageController
                 ])->values()->all(),
 
                 'about_stats' => [
-                    'title'   => $about->title ?? null,
-                    'content' => $about->content ?? null,
-                    'image'   => $about->image ?? null,
+                    'title'   => $about?->title ?? null,
+                    'content' => $about?->content ?? null,
+                    'image'   => $about?->image ?? null,
                     'images'  => $images,
                     'stats'   => $this->safeCollect(function () {
                         return DB::table('stats')
@@ -194,6 +196,47 @@ class HomePageController
         } catch (Throwable) {
             return null;
         }
+    }
+
+    /**
+     * @param  \Illuminate\Support\Collection<int, object>  $aboutRows
+     * @return list<string>
+     */
+    private function collageImages(?object $about, $aboutRows): array
+    {
+        $fromJson = $this->decodeImageList($about?->images ?? null);
+        if ($fromJson !== []) {
+            return $fromJson;
+        }
+
+        return $aboutRows
+            ->pluck('image')
+            ->filter(fn ($path) => is_string($path) && $path !== '')
+            ->unique()
+            ->take(4)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function decodeImageList(mixed $value): array
+    {
+        if (is_string($value) && $value !== '') {
+            $value = json_decode($value, true);
+        }
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        return collect($value)
+            ->filter(fn ($path) => is_string($path) && $path !== '')
+            ->unique()
+            ->take(4)
+            ->values()
+            ->all();
     }
 
     /**

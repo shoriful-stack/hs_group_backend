@@ -17,7 +17,12 @@ class AboutUsResource extends JsonResource {
             'branch'     => optional( $this->branch )->name,
             'title'      => $this->title,
             'content'    => $this->content,
-            'image'      => asset($this->image),
+            'image'      => $this->image ? asset($this->image) : null,
+            'images'     => collect($this->images ?? [])
+                ->filter(fn ($path) => is_string($path) && $path !== '')
+                ->map(fn ($path) => asset($path))
+                ->values()
+                ->all(),
         ];
     }
 }
