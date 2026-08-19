@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             GeneralSettingSeeder::class,
             UserSeeder::class,
+            BlogCategorySeeder::class,
+            BlogAuthorSeeder::class,
         ]);
     }
 }
