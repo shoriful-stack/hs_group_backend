@@ -51,6 +51,9 @@ class BlogAuthor extends Model
             if (Auth::check()) {
                 $model->branch_id = Auth::user()->branch_id;
             }
+            if (empty($model->language_id)) {
+                $model->language_id = 1;
+            }
         });
     }
 }

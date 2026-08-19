@@ -6,9 +6,9 @@ use App\CustomClass\Helper;
 use App\CustomClass\ReturnMessage;
 use App\DataTables\BlogAuthorDataTable;
 use App\Http\Requests\Blog\BlogAuthorRequest;
+use App\Enums\Status;
 use App\Models\Blog;
 use App\Models\BlogAuthor;
-use App\Models\Language;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -23,8 +23,7 @@ class BlogAuthorController extends Controller
 
     public function create()
     {
-        $languages = Language::where('status', 1)->pluck('name', 'id');
-        return view('blogAuthor.create', compact('languages'));
+        return view('blogAuthor.create');
     }
 
     public function store(BlogAuthorRequest $request)
@@ -38,8 +37,9 @@ class BlogAuthorController extends Controller
             }
 
             BlogAuthor::create([
-                'language_id' => $request->language_id,
+                'language_id' => 1,
                 'name'        => $request->name,
+                'status'      => Status::ACTIVE,
                 'designation' => $request->designation,
                 'department'  => $request->department,
                 'bio'         => $request->bio,
@@ -59,8 +59,7 @@ class BlogAuthorController extends Controller
 
     public function edit(BlogAuthor $blogAuthor)
     {
-        $languages = Language::where('status', 1)->pluck('name', 'id');
-        return view('blogAuthor.edit', compact('blogAuthor', 'languages'));
+        return view('blogAuthor.edit', compact('blogAuthor'));
     }
 
     public function update(BlogAuthorRequest $request, BlogAuthor $blogAuthor)
@@ -78,7 +77,6 @@ class BlogAuthorController extends Controller
             }
 
             $blogAuthor->update([
-                'language_id' => $request->language_id,
                 'name'        => $request->name,
                 'designation' => $request->designation,
                 'department'  => $request->department,
@@ -116,6 +114,7 @@ class BlogAuthorController extends Controller
     {
         try {
             $authors = BlogAuthor::query()
+                ->active()
                 ->when($request->q, function ($query) use ($request) {
                     $query->where('name', 'LIKE', '%' . $request->q . '%');
                 })

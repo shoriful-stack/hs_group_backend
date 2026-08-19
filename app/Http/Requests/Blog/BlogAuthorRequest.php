@@ -17,7 +17,6 @@ class BlogAuthorRequest extends FormRequest
     {
         return [
             'name'         => ['required', 'string', 'max:255'],
-            'language_id'  => ['nullable', 'numeric'],
             'designation'  => ['nullable', 'string', 'max:255'],
             'department'   => ['nullable', 'string', 'max:255'],
             'bio'          => ['nullable', 'string'],

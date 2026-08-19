@@ -7,15 +7,6 @@
     @csrf
     <div class="row">
         <div class="form-group col-md-6 mb-2">
-            <label for="language_id">{{ __('Language') }} <span class="text-danger">*</span></label>
-            <select name="language_id" id="language_id" class="form-control" required>
-                @foreach($languages as $id => $name)
-                    <option value="{{ $id }}">{{ $name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="form-group col-md-6 mb-2">
             <label for="serial_no">{{ __('Serial No') }} <span class="text-danger">*</span></label>
             <input class="form-control" id="serial_no" name="serial_no" type="number" value="{{ old('serial_no', 1) }}" required />
         </div>

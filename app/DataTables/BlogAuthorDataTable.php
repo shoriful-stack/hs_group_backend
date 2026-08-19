@@ -15,7 +15,6 @@ class BlogAuthorDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('language', fn($row) => @$row->language->name)
             ->editColumn('photo', fn($row) => $row->photo ? view('blogAuthor.thumb', compact('row')) : '')
             ->editColumn('action', fn($row) => view('blogAuthor.action', compact('row')))
             ->editColumn('status', fn($query) => $query->status?->badge())
@@ -54,7 +53,6 @@ class BlogAuthorDataTable extends DataTable
                 ->printable(false)
                 ->width(60)
                 ->addClass('text-center'),
-            Column::make('language'),
             Column::make('photo'),
             Column::make('name'),
             Column::make('designation'),
