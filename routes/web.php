@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AwardController;
+use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ChooseUsController;
@@ -114,6 +115,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
     Route::resource('sliders', SliderController::class);
     Route::resource('awards', AwardController::class);
+    Route::resource('testimonials', TestimonialController::class);
     Route::resource('ourCustomers', OurCustomerController::class);
     Route::resource('stats', StatController::class);
     Route::resource('brands', BrandController::class);

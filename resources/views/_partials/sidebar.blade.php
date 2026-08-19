@@ -116,6 +116,15 @@
                   </a>
               </li>
               @endif
+            @if(auth()->user()->role->hasAnyDirectPermission(['All Testimonials']))
+              <li>
+                  <a href="{{ route('testimonials.index') }}" aria-expanded="false">
+                      <div class="parent-icon"><i class="bi bi-chat-quote"></i>
+                      </div>
+                      <div class="menu-title">Testimonials</div>
+                  </a>
+              </li>
+              @endif
               <li>
                   <a href="{{ route('ourCustomers.index') }}" aria-expanded="false">
                       <div class="parent-icon"><i class="bi bi-person"></i>

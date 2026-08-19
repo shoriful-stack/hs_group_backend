@@ -111,6 +111,30 @@ class HomeController
             'data'    => $award
         ], 200);
     }
+
+    public function testimonial()
+    {
+        $testimonials = Cache::remember('testimonials', 86400, function () {
+
+            return DB::table('testimonials')
+                ->select(
+                    'id',
+                    'name',
+                    'role',
+                    'quote',
+                    'image'
+                )
+                ->where('status', 1)
+                ->whereNull('deleted_at')
+                ->latest('id')
+                ->get();
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $testimonials
+        ], 200);
+    }
     // public function homeSettings()
     // {
 

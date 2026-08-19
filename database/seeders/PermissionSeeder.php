@@ -98,6 +98,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Delete Awards', 'module_id' => $modules->id, 'guard_name' => 'web']);
 
         $modules = Module::firstOrCreate(
+            ['name' => 'Testimonials']
+        );
+
+        Permission::firstOrCreate(['name' => 'All Testimonials', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Add Testimonials', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Edit Testimonials', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Delete Testimonials', 'module_id' => $modules->id, 'guard_name' => 'web']);
+
+        $modules = Module::firstOrCreate(
             ['name' => 'Our Core Values']
         );
 
@@ -264,5 +273,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Add Solutions', 'module_id' => $modules->id, 'guard_name' => 'web']);
         Permission::firstOrCreate(['name' => 'Edit Solutions', 'module_id' => $modules->id, 'guard_name' => 'web']);
         Permission::firstOrCreate(['name' => 'Delete Solutions', 'module_id' => $modules->id, 'guard_name' => 'web']);
+
+        $adminRole = \App\Models\Role::query()->find(1);
+        if ($adminRole) {
+            $adminRole->givePermissionTo([
+                'All Testimonials',
+                'Add Testimonials',
+                'Edit Testimonials',
+                'Delete Testimonials',
+            ]);
+        }
     }
 }

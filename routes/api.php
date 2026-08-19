@@ -54,6 +54,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/iot', [HomeController::class, 'iot']);
     Route::get('/customers', [HomeController::class, 'customer']);
     Route::get('/awards', [HomeController::class, 'award']);
+    Route::get('/testimonials', [HomeController::class, 'testimonial']);
     Route::get('/sliders', [HomeController::class, 'slider']);
     Route::get('/home/static-data', [HomePageController::class, 'staticData']);
     Route::get('/layout', [LayoutController::class, 'show']);
