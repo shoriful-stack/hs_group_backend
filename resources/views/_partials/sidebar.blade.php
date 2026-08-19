@@ -238,7 +238,13 @@
                       <li class="{{ request()->routeIs('stats.*') ? 'mm-active' : '' }}"> <a
                               href="{{ route('stats.index') }}"><i class="bi bi-arrow-right-short"></i>Stats</a></li>       
                       <li class="{{ request()->routeIs('milestones.*') ? 'mm-active' : '' }}"> <a
-                              href="{{ route('milestones.index') }}"><i class="bi bi-arrow-right-short"></i>Milestones</a></li> 
+                              href="{{ route('milestones.index') }}"><i class="bi bi-arrow-right-short"></i>Milestones</a></li>
+                      <li class="{{ request()->routeIs('capabilities.*') ? 'mm-active' : '' }}"> <a
+                              href="{{ route('capabilities.index') }}"><i class="bi bi-arrow-right-short"></i>Capabilities</a></li>
+                      <li class="{{ request()->routeIs('industries.*') ? 'mm-active' : '' }}"> <a
+                              href="{{ route('industries.index') }}"><i class="bi bi-arrow-right-short"></i>Industries</a></li>
+                      <li class="{{ request()->routeIs('sustainability.*') ? 'mm-active' : '' }}"> <a
+                              href="{{ route('sustainability.index') }}"><i class="bi bi-arrow-right-short"></i>Sustainability</a></li> 
                     @can('All Our Mission')
                       <li class="{{ request()->routeIs('ourMissions.*') ? 'mm-active' : '' }}"> <a
                               href="{{ route('ourMissions.index') }}"><i class="bi bi-arrow-right-short"></i>Our

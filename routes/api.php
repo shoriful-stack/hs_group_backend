@@ -52,6 +52,9 @@ Route::prefix('v1')->group(function () {
     Route::get('/brands', [AboutUsController::class, 'brands']);
     Route::get('/milestones', [AboutUsController::class, 'milestones']);
     Route::get('/leadership-messages', [AboutUsController::class, 'leadership_messages']);
+    Route::get('/capabilities', [AboutUsController::class, 'capabilities']);
+    Route::get('/industries', [AboutUsController::class, 'industries']);
+    Route::get('/sustainability', [AboutUsController::class, 'sustainability']);
 
     Route::get('/stats', [HomeController::class, 'stat']);
     Route::get('/iot', [HomeController::class, 'iot']);
