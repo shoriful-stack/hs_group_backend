@@ -16,7 +16,6 @@ class BlogController extends BaseController
     public function index(Request $request)
     {
         $blogs = Blog::with(['category', 'tags', 'author' => fn($q) => $q->withCount('blogs')])
-            ->where('branch_id', getBranchByDomain()->id)
             ->published();
 
         if ($request->filled('category')) {
@@ -79,7 +78,6 @@ class BlogController extends BaseController
     public function categories()
     {
         $categories = BlogCategory::active()
-            ->where('branch_id', getBranchByDomain()->id)
             ->orderBy('serial_no')
             ->get();
 
@@ -92,7 +90,6 @@ class BlogController extends BaseController
     {
         $authors = BlogAuthor::withCount('blogs')
             ->active()
-            ->where('branch_id', getBranchByDomain()->id)
             ->orderBy('serial_no')
             ->get();
 
