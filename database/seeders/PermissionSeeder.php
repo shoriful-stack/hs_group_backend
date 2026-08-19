@@ -174,6 +174,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Delete Blog Tags', 'module_id' => $modules->id, 'guard_name' => 'web']);
 
         $modules = Module::firstOrCreate(
+            ['name' => 'Blog Authors']
+        );
+
+        Permission::firstOrCreate(['name' => 'All Blog Authors', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Add Blog Authors', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Edit Blog Authors', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Delete Blog Authors', 'module_id' => $modules->id, 'guard_name' => 'web']);
+
+        $modules = Module::firstOrCreate(
             ['name' => 'Contact Settings']
         );
 
@@ -281,6 +290,22 @@ class PermissionSeeder extends Seeder
                 'Add Testimonials',
                 'Edit Testimonials',
                 'Delete Testimonials',
+                'All Blogs',
+                'Add Blogs',
+                'Edit Blogs',
+                'Delete Blogs',
+                'All Blog Categories',
+                'Add Blog Categories',
+                'Edit Blog Categories',
+                'Delete Blog Categories',
+                'All Blog Tags',
+                'Add Blog Tags',
+                'Edit Blog Tags',
+                'Delete Blog Tags',
+                'All Blog Authors',
+                'Add Blog Authors',
+                'Edit Blog Authors',
+                'Delete Blog Authors',
             ]);
         }
     }

@@ -3,31 +3,58 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\API\BaseController;
+use App\Http\Resources\BlogAuthorResource;
+use App\Http\Resources\BlogCategoryResource;
 use App\Http\Resources\BlogResource;
-use App\Http\Resources\BlogTagResource;
 use App\Models\Blog;
-use App\Models\BlogTag;
+use App\Models\BlogAuthor;
+use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 
-class BlogController extends BaseController {
+class BlogController extends BaseController
+{
+    public function index(Request $request)
+    {
+        $blogs = Blog::with(['category', 'tags', 'author' => fn($q) => $q->withCount('blogs')])
+            ->where('branch_id', getBranchByDomain()->id)
+            ->published();
 
-    public function index( Request $request ) {
-
-        $blogs = Blog::with(  'category', 'tags' )
-        ->where('branch_id', getBranchByDomain()->id)
-            ->where( 'status', 2 )
-            ->orderBy( "published_at", "desc" );
-
-        if ( $request->has( 'category' ) ) {
-            $blogs->whereHas( 'category', function ( $q ) use ( $request ) {
-                $q->where( 'slug', $request->get( 'category' ) );
-            } );
+        if ($request->filled('category')) {
+            $blogs->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->get('category'));
+            });
         }
 
-        if ( $request->has( 'tag' ) ) {
-            $blogs->whereHas( 'tags', function ( $q ) use ( $request ) {
-                $q->where( 'slug', $request->get( 'tag' ) );
-            } );
+        if ($request->filled('tag')) {
+            $blogs->whereHas('tags', function ($q) use ($request) {
+                $q->where('slug', $request->get('tag'));
+            });
+        }
+
+        if ($request->boolean('featured')) {
+            $blogs->where('featured', true);
+        }
+
+        if ($request->boolean('exclude_featured')) {
+            $blogs->where('featured', false);
+        }
+
+        if ($request->filled('q')) {
+            $q = $request->get('q');
+            $blogs->where(function ($query) use ($q) {
+                $query->where('title', 'like', "%{$q}%")
+                    ->orWhere('excerpt', 'like', "%{$q}%")
+                    ->orWhere('summary', 'like', "%{$q}%");
+            });
+        }
+
+        $sort = $request->get('sort', 'newest');
+        if ($sort === 'oldest') {
+            $blogs->orderBy('published_at');
+        } elseif ($sort === 'popular') {
+            $blogs->orderByDesc('views');
+        } else {
+            $blogs->orderByDesc('published_at');
         }
 
         if ($request->filled('limit')) {
@@ -38,40 +65,94 @@ class BlogController extends BaseController {
             ], 'Blogs retrieved successfully.');
         }
 
-        $perPage = $request->get( 'per_page', 10 );
-        $paginated = $blogs->paginate( $perPage );
+        $perPage = $request->get('per_page', 10);
+        $paginated = $blogs->paginate($perPage);
 
-        $array = [
-            'blogs'        => BlogResource::collection( $paginated ),
+        return $this->sendResponse([
+            'blogs'        => BlogResource::collection($paginated),
             'totalResults' => $paginated->total(),
             'currentPage'  => $paginated->currentPage(),
             'totalPages'   => $paginated->lastPage(),
-        ];
-        return $this->sendResponse( $array, 'Blogs retrieved successfully.' );
-    }
-    public function blog_tags( Request $request ) {
-
-        $blog_tags = BlogTag::with( 'language' )
-        ->where('branch_id', getBranchByDomain()->id)
-            ->paginate( 20 );
-
-        $array = [
-            'blog_tags' => BlogTagResource::collection( $blog_tags ),
-        ];
-        return $this->sendResponse( $array, 'Blog Tags retrieved successfully.' );
+        ], 'Blogs retrieved successfully.');
     }
 
-    public function show( $slug ) {
+    public function categories()
+    {
+        $categories = BlogCategory::active()
+            ->where('branch_id', getBranchByDomain()->id)
+            ->orderBy('serial_no')
+            ->get();
 
-        $blog = Blog::with( 'language', 'category', 'tags' )
-            ->where( 'slug', $slug )->first();
-        if ( !$blog ) {
-            return $this->sendError( 'Blog not found' );
+        return $this->sendResponse([
+            'categories' => BlogCategoryResource::collection($categories),
+        ], 'Blog categories retrieved successfully.');
+    }
+
+    public function authors()
+    {
+        $authors = BlogAuthor::withCount('blogs')
+            ->active()
+            ->where('branch_id', getBranchByDomain()->id)
+            ->orderBy('serial_no')
+            ->get();
+
+        return $this->sendResponse([
+            'authors' => BlogAuthorResource::collection($authors),
+        ], 'Blog authors retrieved successfully.');
+    }
+
+    public function show($slug)
+    {
+        $blog = Blog::with(['language', 'category', 'tags', 'author' => fn($q) => $q->withCount('blogs')])
+            ->published()
+            ->where('slug', $slug)
+            ->first();
+
+        if (!$blog) {
+            return $this->sendError('Blog not found');
         }
-        $array = [
-            'blog' => new BlogResource( $blog ),
-        ];
-        return $this->sendResponse( $array, 'Blogs retrieved successfully.' );
-    }
 
+        $blog->increment('views');
+
+        $prev = Blog::published()
+            ->where('published_at', '<', $blog->published_at)
+            ->orderByDesc('published_at')
+            ->first(['id', 'title', 'slug', 'image', 'published_at']);
+
+        $next = Blog::published()
+            ->where('published_at', '>', $blog->published_at)
+            ->orderBy('published_at')
+            ->first(['id', 'title', 'slug', 'image', 'published_at']);
+
+        $related = Blog::with('category', 'author')
+            ->published()
+            ->where('id', '!=', $blog->id)
+            ->when($blog->category_id, fn($q) => $q->where('category_id', $blog->category_id))
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+
+        $recent = Blog::with('category')
+            ->published()
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('published_at')
+            ->limit(5)
+            ->get();
+
+        $popular = Blog::with('category')
+            ->published()
+            ->where('id', '!=', $blog->id)
+            ->orderByDesc('views')
+            ->limit(5)
+            ->get();
+
+        return $this->sendResponse([
+            'blog'     => new BlogResource($blog),
+            'prev'     => $prev ? new BlogResource($prev) : null,
+            'next'     => $next ? new BlogResource($next) : null,
+            'related'  => BlogResource::collection($related),
+            'recent'   => BlogResource::collection($recent),
+            'popular'  => BlogResource::collection($popular),
+        ], 'Blogs retrieved successfully.');
+    }
 }

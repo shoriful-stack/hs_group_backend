@@ -8,12 +8,12 @@
             <a class="dropdown-item" href="{{ route('blogs.edit', $row->id) }}">Edit</a>
         </li>
         @endcan
-        <!-- 
         @can('Delete Blogs')
-        <li>
-            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal"  onclick="loadModal('{{ route('blogs.destroy', $row->id) }}')">Delete</a>
-        </li>
+        <form action="{{ route('blogs.destroy', $row->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?')">
+            @csrf
+            @method('DELETE')
+            <button class="dropdown-item" type="submit">{{ __('Delete') }}</button>
+        </form>
         @endcan
-        -->
     </ul>
 </div>

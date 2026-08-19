@@ -29,6 +29,16 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-2">
+                                    <label for="excerpt">{{ __('Excerpt') }}</label>
+                                    <textarea name="excerpt" id="excerpt" class="form-control" rows="2">{{ old('excerpt', $blog->excerpt) }}</textarea>
+                                </div>
+
+                                <div class="form-group col-md-12 mb-2">
+                                    <label for="summary">{{ __('Summary') }}</label>
+                                    <textarea name="summary" id="summary" class="form-control" rows="3">{{ old('summary', $blog->summary) }}</textarea>
+                                </div>
+
+                                <div class="form-group col-md-12 mb-2">
                                     <label for="tag_id">{{ __('Tags') }}</label>
                                     <select name="tag_id[]" id="tag_id" class="form-select search_tags" multiple>
                                         @foreach($blog->tags as $tag)
@@ -56,9 +66,25 @@
                                 </div>
 
                                 <div class="form-group col-md-6 mb-2">
+                                    <label for="pdf_file">{{ __('Press PDF') }}</label>
+                                    <input type="file" name="pdf_file" id="pdf_file" class="form-control" accept="application/pdf">
+                                    @if($blog->pdf_file)
+                                        <div class="mt-2">
+                                            <a href="{{ asset($blog->pdf_file) }}" target="_blank">{{ __('Current PDF') }}</a>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="form-group col-md-6 mb-2">
                                     <label for="serial_no">{{ __('Serial No') }}</label>
                                     <input type="number" name="serial_no" id="serial_no" class="form-control"
                                            placeholder="1" value="{{ old('serial_no', $blog->serial_no) }}">
+                                </div>
+
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="reading_time">{{ __('Reading Time (minutes)') }}</label>
+                                    <input type="number" name="reading_time" id="reading_time" class="form-control"
+                                           min="1" max="60" value="{{ old('reading_time', $blog->reading_time) }}">
                                 </div>
 
                             </div>
@@ -95,6 +121,22 @@
                                             <option value="{{ $blog->category->id }}" selected>{{ $blog->category->name }}</option>
                                         @endif
                                     </select>
+                                </div>
+
+                                <div class="form-group mb-2">
+                                    <label for="author_id">{{ __('Author') }}</label>
+                                    <select name="author_id" id="author_id" class="form-select search_author">
+                                        @if($blog->author)
+                                            <option value="{{ $blog->author->id }}" selected>{{ $blog->author->name }}</option>
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input type="hidden" name="featured" value="0">
+                                    <input type="checkbox" name="featured" value="1" class="form-check-input" id="featured"
+                                           {{ old('featured', $blog->featured) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="featured">{{ __('Featured article') }}</label>
                                 </div>
 
                                 <div class="form-group mb-2">
@@ -193,6 +235,21 @@
                 placeholder: "Select Tags",
                 ajax: {
                     url: "{{ route('tags.search') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: params => ({ q: params.term }),
+                    processResults: data => ({
+                        results: $.map(data, item => ({ text: item.name, id: item.id }))
+                    })
+                }
+            });
+
+            $('.search_author').select2({
+                theme: 'classic',
+                placeholder: "Select Author",
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('blogAuthor.search') }}",
                     dataType: 'json',
                     delay: 250,
                     data: params => ({ q: params.term }),

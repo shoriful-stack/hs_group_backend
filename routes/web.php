@@ -3,6 +3,9 @@
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\BlogAuthorController;
+use App\Http\Controllers\BlogCategoryController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ChooseUsController;
@@ -33,6 +36,7 @@ use App\Http\Controllers\ServiceEquipmentCategoryController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\SocialLinkController;
 use App\Http\Controllers\StatController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
@@ -91,13 +95,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     // Route::resource('pages', PageController::class);
     Route::resource('leadership-messages', LeadershipMessageController::class);
 
-    // Route::get('blogCategories/search', [BlogCategoryController::class, 'search'])->name('blogCategory.search');
-    // Route::resource('blogCategories', BlogCategoryController::class);
-    // Route::resource('blogs', BlogController::class);
+    Route::get('blogCategories/search', [BlogCategoryController::class, 'search'])->name('blogCategory.search');
+    Route::resource('blogCategories', BlogCategoryController::class);
+    Route::resource('blogs', BlogController::class);
+    Route::get('blogAuthors/search', [BlogAuthorController::class, 'search'])->name('blogAuthor.search');
+    Route::resource('blogAuthors', BlogAuthorController::class);
     Route::post('ckEditorUpload', CKEditorUploadService::class)->name('ckEditorUpload');
 
-    // Route::get('tags/search', [TagController::class, 'search'])->name('tags.search');
-    // Route::resource('tags', TagController::class);
+    Route::get('tags/search', [TagController::class, 'search'])->name('tags.search');
+    Route::resource('tags', TagController::class);
 
     Route::resource('products', ProductController::class);
     Route::resource('productCategories', ProductCategoryController::class);

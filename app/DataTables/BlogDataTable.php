@@ -22,6 +22,7 @@ class BlogDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->addColumn('language', fn($row) => @$row->language->name)
             ->addColumn( 'category', fn( $row ) => @$row->category->name )
+            ->addColumn( 'author', fn( $row ) => @$row->author->name )
             ->addColumn( 'created_by', fn( $row ) => @$row->createdBy->name )
             ->editColumn('image', fn($row) => $row->image ? view('blog.thumb', compact('row')) : '')
             // ->addColumn('tags', fn($row) => @$row->tags->name)
@@ -36,7 +37,7 @@ class BlogDataTable extends DataTable
      */
     public function query(Blog $model): QueryBuilder
     {
-        return $model->newQuery();
+        return $model->newQuery()->with(['language', 'category', 'author', 'createdBy']);
     }
 
     /**
@@ -74,6 +75,7 @@ class BlogDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('language'),
             Column::make('category'),
+            Column::make('author'),
             Column::make('image'),
             // Column::make('tags'),
             Column::make('title'),

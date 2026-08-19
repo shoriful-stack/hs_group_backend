@@ -162,17 +162,17 @@
                   </ul>
               </li>
             @endif
-            {{--             @if(auth()->user()->role->hasAnyDirectPermission(['All Blog Categories', 'All Blog Tags', ' All Blogs']))
-              <li class="{{ request()->routeIs('blogs.*', 'tags.*', 'blogCategories.*') ? 'mm-active' : '' }}">
+            @if(auth()->user()->role->hasAnyDirectPermission(['All Blog Categories', 'All Blog Tags', 'All Blogs', 'All Blog Authors']))
+              <li class="{{ request()->routeIs('blogs.*', 'tags.*', 'blogCategories.*', 'blogAuthors.*') ? 'mm-active' : '' }}">
                   <a class="has-arrow" href="javascript:;">
                       <div class="parent-icon"><i class="bi bi-card-checklist"></i>
                       </div>
-                      <div class="menu-title">Blogs</div>
+                      <div class="menu-title">News & Media</div>
                   </a>
                   <ul>
                     @can('All Blogs')
                       <li class="{{ request()->routeIs('blogs.*') ? 'mm-active' : '' }}"> <a
-                              href="{{ route('blogs.index') }}"><i class="bi bi-arrow-right-short"></i>All Blog</a>
+                              href="{{ route('blogs.index') }}"><i class="bi bi-arrow-right-short"></i>All Articles</a>
                       </li>
                     @endcan
                     @can('All Blog Categories')
@@ -183,12 +183,17 @@
                     @endcan
                     @can('All Blog Tags')
                       <li class="{{ request()->routeIs('tags.*') ? 'mm-active' : '' }}"> <a
-                              href="{{ route('tags.index') }}"><i class="bi bi-arrow-right-short"></i>Blog Tags</a>
+                              href="{{ route('tags.index') }}"><i class="bi bi-arrow-right-short"></i>Tags</a>
+                      </li>
+                    @endcan
+                    @can('All Blog Authors')
+                      <li class="{{ request()->routeIs('blogAuthors.*') ? 'mm-active' : '' }}"> <a
+                              href="{{ route('blogAuthors.index') }}"><i class="bi bi-arrow-right-short"></i>Authors</a>
                       </li>
                     @endcan
                   </ul>
               </li>
-              @endif --}}
+              @endif
             @if(auth()->user()->role->hasAnyDirectPermission(['All Roles', 'All Users']))
               <li class="{{ request()->routeIs('roles.*', 'users.*') ? 'mm-active' : '' }}">
                   <a class="has-arrow" href="javascript:;">

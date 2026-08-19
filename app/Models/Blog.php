@@ -17,7 +17,9 @@ class Blog extends Model {
     protected $table = 'blogs';
     protected $guarded = ['id'];
     protected $casts = [
-        'status' => BlogStatus::class,
+        'status'       => BlogStatus::class,
+        'featured'     => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function getSlugOptions(): SlugOptions {
@@ -32,7 +34,11 @@ class Blog extends Model {
     }
 
     public function category() {
-        return $this->belongsTo( BlogCategory::class );
+        return $this->belongsTo( BlogCategory::class, 'category_id' );
+    }
+
+    public function author() {
+        return $this->belongsTo( BlogAuthor::class, 'author_id' );
     }
 
     public function language() {
@@ -47,7 +53,9 @@ class Blog extends Model {
     protected static function boot() {
         parent::boot();
         static::creating( function ( $model ) {
-            $model->branch_id = Auth::user()->branch_id;
+            if ( Auth::check() ) {
+                $model->branch_id = Auth::user()->branch_id;
+            }
         } );
     }
 }

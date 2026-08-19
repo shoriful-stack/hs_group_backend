@@ -26,6 +26,18 @@
                                 </div>
 
                                 <div class="form-group col-md-12 mb-2">
+                                    <label for="excerpt">{{ __('Excerpt') }}</label>
+                                    <textarea name="excerpt" id="excerpt" class="form-control" rows="2"
+                                              placeholder="Short card summary">{{ old('excerpt') }}</textarea>
+                                </div>
+
+                                <div class="form-group col-md-12 mb-2">
+                                    <label for="summary">{{ __('Summary') }}</label>
+                                    <textarea name="summary" id="summary" class="form-control" rows="3"
+                                              placeholder="Lead paragraph on the detail page">{{ old('summary') }}</textarea>
+                                </div>
+
+                                <div class="form-group col-md-12 mb-2">
                                     <label for="tag_id">{{ __('Tags') }}</label>
                                     <select name="tag_id[]" id="tag_id" class="form-select search_tags" multiple></select>
                                 </div>                                
@@ -44,9 +56,20 @@
                                 </div>
 
                                 <div class="form-group col-md-6 mb-2">
+                                    <label for="pdf_file">{{ __('Press PDF') }}</label>
+                                    <input type="file" name="pdf_file" id="pdf_file" class="form-control" accept="application/pdf">
+                                </div>
+
+                                <div class="form-group col-md-6 mb-2">
                                     <label for="serial_no">{{ __('Serial No') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="serial_no" id="serial_no" class="form-control"
                                            placeholder="1" value="{{ old('serial_no', 1) }}" required>
+                                </div>
+
+                                <div class="form-group col-md-6 mb-2">
+                                    <label for="reading_time">{{ __('Reading Time (minutes)') }}</label>
+                                    <input type="number" name="reading_time" id="reading_time" class="form-control"
+                                           min="1" max="60" placeholder="Auto from content" value="{{ old('reading_time') }}">
                                 </div>
 
                             </div>
@@ -73,6 +96,18 @@
                                 <div class="form-group mb-2">
                                     <label for="category_id">{{ __('Category') }} <span class="text-danger">*</span></label>
                                     <select name="category_id" id="category_id" class="form-select search_category" required></select>
+                                </div>
+
+                                <div class="form-group mb-2">
+                                    <label for="author_id">{{ __('Author') }}</label>
+                                    <select name="author_id" id="author_id" class="form-select search_author"></select>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input type="hidden" name="featured" value="0">
+                                    <input type="checkbox" name="featured" value="1" class="form-check-input" id="featured"
+                                           {{ old('featured') ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="featured">{{ __('Featured article') }}</label>
                                 </div>
 
                                 <div class="form-group mb-2">
@@ -181,6 +216,24 @@
                 allowClear: true,
                 ajax: {
                     url: "{{ route('tags.search') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: params => ({ q: params.term, page_limit: 10 }),
+                    processResults: data => ({
+                        results: $.map(data, item => ({ text: item.name, id: item.id }))
+                    }),
+                    cache: true
+                }
+            });
+
+            $('.search_author').select2({
+                width: '100%',
+                theme: 'classic',
+                minimumInputLength: 0,
+                placeholder: "Select Author",
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('blogAuthor.search') }}",
                     dataType: 'json',
                     delay: 250,
                     data: params => ({ q: params.term, page_limit: 10 }),
