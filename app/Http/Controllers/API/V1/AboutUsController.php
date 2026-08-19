@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AboutUsController
 {
@@ -166,16 +167,17 @@ class AboutUsController
     }
     public function milestones()
     {
-        $milestone = Cache::remember('milestones', 86400, function () {
+        $milestone = Cache::remember('milestones_v2', 86400, function () {
 
             return DB::table('milestones')
-                ->select(
+                ->select(array_values(array_filter([
                     'id',
                     'year',
                     'title',
                     'content',
+                    Schema::hasColumn('milestones', 'image') ? 'image' : null,
                     'serial_no',
-                )
+                ])))
                 ->orderByDesc('serial_no')
                 ->get();
         });
@@ -205,6 +207,56 @@ class AboutUsController
             'data'    => $leadership_message
         ], 200);
     }
+
+    public function capabilities()
+    {
+        $items = Cache::remember('capabilities', 86400, function () {
+            return DB::table('capabilities')
+                ->whereNull('deleted_at')
+                ->where('status', 1)
+                ->orderBy('serial_no')
+                ->select('id', 'title', 'content', 'icon', 'features', 'serial_no')
+                ->get();
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $items,
+        ], 200);
+    }
+
+    public function industries()
+    {
+        $items = Cache::remember('industries', 86400, function () {
+            return DB::table('industries')
+                ->whereNull('deleted_at')
+                ->where('status', 1)
+                ->orderBy('serial_no')
+                ->select('id', 'title', 'content', 'icon', 'serial_no')
+                ->get();
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $items,
+        ], 200);
+    }
+
+    public function sustainability()
+    {
+        $item = Cache::remember('sustainability', 86400, function () {
+            return DB::table('sustainabilities')
+                ->whereNull('deleted_at')
+                ->select('id', 'title', 'subtitle', 'sub_title', 'content', 'quote', 'closing', 'image')
+                ->first();
+        });
+
+        return response()->json([
+            'success' => true,
+            'data'    => $item,
+        ], 200);
+    }
+
     public function social_links()
     {
         $social_link = Cache::remember('social-links', 86400, function () {
