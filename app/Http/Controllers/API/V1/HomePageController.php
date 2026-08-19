@@ -120,7 +120,7 @@ class HomePageController
                 'features' => $this->mapFeatures($chooseUs?->features ?? null),
 
                 'partners' => $this->safeCollect(function () {
-                    return DB::table('brands')
+                    return DB::table('our_customers')
                         ->whereNull('deleted_at')
                         ->where('status', 1)
                         ->select('id', 'title', 'image', 'content')
