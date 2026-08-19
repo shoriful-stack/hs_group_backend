@@ -162,8 +162,8 @@
                   </ul>
               </li>
             @endif
-            @if(auth()->user()->role->hasAnyDirectPermission(['All Blog Categories', 'All Blog Tags', 'All Blogs', 'All Blog Authors']))
-              <li class="{{ request()->routeIs('blogs.*', 'tags.*', 'blogCategories.*', 'blogAuthors.*') ? 'mm-active' : '' }}">
+            @if(auth()->user()->role->hasAnyDirectPermission(['All Blog Categories', 'All Blog Tags', 'All Blogs', 'All Blog Authors', 'All News Events']))
+              <li class="{{ request()->routeIs('blogs.*', 'tags.*', 'blogCategories.*', 'blogAuthors.*', 'newsEvents.*') ? 'mm-active' : '' }}">
                   <a class="has-arrow" href="javascript:;">
                       <div class="parent-icon"><i class="bi bi-card-checklist"></i>
                       </div>
@@ -189,6 +189,11 @@
                     @can('All Blog Authors')
                       <li class="{{ request()->routeIs('blogAuthors.*') ? 'mm-active' : '' }}"> <a
                               href="{{ route('blogAuthors.index') }}"><i class="bi bi-arrow-right-short"></i>Authors</a>
+                      </li>
+                    @endcan
+                    @can('All News Events')
+                      <li class="{{ request()->routeIs('newsEvents.*') ? 'mm-active' : '' }}"> <a
+                              href="{{ route('newsEvents.index') }}"><i class="bi bi-arrow-right-short"></i>Events</a>
                       </li>
                     @endcan
                   </ul>

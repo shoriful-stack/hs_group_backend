@@ -25,6 +25,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/blog/{slug}', [BlogController::class, 'show']);
     Route::get('/blog-categories', [BlogController::class, 'categories']);
     Route::get('/blog-authors', [BlogController::class, 'authors']);
+    Route::get('/events', [BlogController::class, 'events']);
 
     Route::get('/service-categories', [ServiceController::class, 'category']);
     Route::get('/services', [ServiceController::class, 'index']);

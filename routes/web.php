@@ -6,6 +6,7 @@ use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\BlogAuthorController;
 use App\Http\Controllers\BlogCategoryController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\NewsEventController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ChooseUsController;
@@ -100,6 +101,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource('blogs', BlogController::class);
     Route::get('blogAuthors/search', [BlogAuthorController::class, 'search'])->name('blogAuthor.search');
     Route::resource('blogAuthors', BlogAuthorController::class);
+    Route::resource('newsEvents', NewsEventController::class);
     Route::post('ckEditorUpload', CKEditorUploadService::class)->name('ckEditorUpload');
 
     Route::get('tags/search', [TagController::class, 'search'])->name('tags.search');

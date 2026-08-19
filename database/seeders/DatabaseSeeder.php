@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BlogCategorySeeder::class,
             BlogAuthorSeeder::class,
+            NewsEventSeeder::class,
         ]);
     }
 }

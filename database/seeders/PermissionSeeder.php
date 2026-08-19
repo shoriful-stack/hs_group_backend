@@ -183,6 +183,15 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Delete Blog Authors', 'module_id' => $modules->id, 'guard_name' => 'web']);
 
         $modules = Module::firstOrCreate(
+            ['name' => 'News Events']
+        );
+
+        Permission::firstOrCreate(['name' => 'All News Events', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Add News Events', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Edit News Events', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Delete News Events', 'module_id' => $modules->id, 'guard_name' => 'web']);
+
+        $modules = Module::firstOrCreate(
             ['name' => 'Contact Settings']
         );
 
@@ -306,6 +315,10 @@ class PermissionSeeder extends Seeder
                 'Add Blog Authors',
                 'Edit Blog Authors',
                 'Delete Blog Authors',
+                'All News Events',
+                'Add News Events',
+                'Edit News Events',
+                'Delete News Events',
             ]);
         }
     }

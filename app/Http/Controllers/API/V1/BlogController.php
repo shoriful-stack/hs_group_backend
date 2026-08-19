@@ -6,9 +6,11 @@ use App\Http\Controllers\API\BaseController;
 use App\Http\Resources\BlogAuthorResource;
 use App\Http\Resources\BlogCategoryResource;
 use App\Http\Resources\BlogResource;
+use App\Http\Resources\NewsEventResource;
 use App\Models\Blog;
 use App\Models\BlogAuthor;
 use App\Models\BlogCategory;
+use App\Models\NewsEvent;
 use Illuminate\Http\Request;
 
 class BlogController extends BaseController
@@ -96,6 +98,23 @@ class BlogController extends BaseController
         return $this->sendResponse([
             'authors' => BlogAuthorResource::collection($authors),
         ], 'Blog authors retrieved successfully.');
+    }
+
+    public function events(Request $request)
+    {
+        $events = NewsEvent::active();
+
+        if ($request->get('status') === 'upcoming') {
+            $events->whereDate('event_date', '>=', now()->toDateString());
+        } elseif ($request->get('status') === 'past') {
+            $events->whereDate('event_date', '<', now()->toDateString());
+        }
+
+        $events->orderBy('event_date');
+
+        return $this->sendResponse([
+            'events' => NewsEventResource::collection($events->get()),
+        ], 'Events retrieved successfully.');
     }
 
     public function show($slug)
