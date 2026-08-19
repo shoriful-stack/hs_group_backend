@@ -292,9 +292,22 @@ class PermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Edit Solutions', 'module_id' => $modules->id, 'guard_name' => 'web']);
         Permission::firstOrCreate(['name' => 'Delete Solutions', 'module_id' => $modules->id, 'guard_name' => 'web']);
 
+        $modules = Module::firstOrCreate(
+            ['name' => 'Career Jobs']
+        );
+
+        Permission::firstOrCreate(['name' => 'All Career Jobs', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Add Career Jobs', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Edit Career Jobs', 'module_id' => $modules->id, 'guard_name' => 'web']);
+        Permission::firstOrCreate(['name' => 'Delete Career Jobs', 'module_id' => $modules->id, 'guard_name' => 'web']);
+
         $adminRole = \App\Models\Role::query()->find(1);
         if ($adminRole) {
             $adminRole->givePermissionTo([
+                'All Career Jobs',
+                'Add Career Jobs',
+                'Edit Career Jobs',
+                'Delete Career Jobs',
                 'All Testimonials',
                 'Add Testimonials',
                 'Edit Testimonials',

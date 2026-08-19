@@ -10,6 +10,7 @@ use App\Http\Controllers\NewsEventController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CapabilityController;
+use App\Http\Controllers\CareerJobController;
 use App\Http\Controllers\ChooseUsController;
 use App\Http\Controllers\CKEditorUploadService;
 use App\Http\Controllers\ContactInquiryController;
@@ -133,6 +134,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource('milestones', MilestoneController::class);
     Route::resource('capabilities', CapabilityController::class);
     Route::resource('industries', IndustryController::class);
+    Route::resource('careerJobs', CareerJobController::class)->except(['show']);
     Route::resource('sustainability', SustainabilityController::class)->only(['index', 'store']);
     Route::get('/storage-app', function () {
         Artisan::call('storage:link');

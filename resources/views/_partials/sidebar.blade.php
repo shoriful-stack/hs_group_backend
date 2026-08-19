@@ -116,6 +116,15 @@
                   </a>
               </li>
               @endif
+            @if(auth()->user()->role->hasAnyDirectPermission(['All Career Jobs']))
+              <li class="{{ request()->routeIs('careerJobs.*') ? 'mm-active' : '' }}">
+                  <a href="{{ route('careerJobs.index') }}" aria-expanded="false">
+                      <div class="parent-icon"><i class="bi bi-briefcase"></i>
+                      </div>
+                      <div class="menu-title">Careers</div>
+                  </a>
+              </li>
+              @endif
             @if(auth()->user()->role->hasAnyDirectPermission(['All Testimonials']))
               <li>
                   <a href="{{ route('testimonials.index') }}" aria-expanded="false">

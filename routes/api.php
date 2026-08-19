@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\V1\AboutUsController;
 use App\Http\Controllers\API\V1\BlogController;
+use App\Http\Controllers\API\V1\CareerController;
 use App\Http\Controllers\API\V1\ContactInquiryController;
 use App\Http\Controllers\API\V1\HomeController;
 use App\Http\Controllers\API\V1\HomePageController;
@@ -55,6 +56,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/capabilities', [AboutUsController::class, 'capabilities']);
     Route::get('/industries', [AboutUsController::class, 'industries']);
     Route::get('/sustainability', [AboutUsController::class, 'sustainability']);
+    Route::get('/careers', [CareerController::class, 'index']);
+    Route::get('/career/{slug}', [CareerController::class, 'show']);
 
     Route::get('/stats', [HomeController::class, 'stat']);
     Route::get('/iot', [HomeController::class, 'iot']);

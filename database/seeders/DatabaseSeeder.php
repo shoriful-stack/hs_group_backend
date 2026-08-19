@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             BlogAuthorSeeder::class,
             NewsEventSeeder::class,
             AboutPageSeeder::class,
+            CareerJobSeeder::class,
         ]);
     }
 }
