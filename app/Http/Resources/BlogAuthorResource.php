@@ -16,7 +16,11 @@ class BlogAuthorResource extends JsonResource
             'designation'     => $this->designation,
             'department'      => $this->department,
             'bio'             => $this->bio,
-            'photo'           => $this->photo ? asset($this->photo) : null,
+            'photo'           => $this->photo
+                ? (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')
+                    ? $this->photo
+                    : asset($this->photo))
+                : null,
             'linkedin'        => $this->linkedin,
             'email'           => $this->email,
             'articles_count'  => $this->blogs_count ?? $this->blogs()->count(),

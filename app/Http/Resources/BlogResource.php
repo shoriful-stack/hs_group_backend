@@ -12,7 +12,7 @@ class BlogResource extends JsonResource
         $wordCount = str_word_count(strip_tags($this->content ?? ''));
         $minutes = $this->reading_time ?: max(1, (int) ceil($wordCount / 200));
         $published = $this->published_at;
-        $isDetail = $request->route('slug') !== null;
+        $isDetail = $request->route('slug') === $this->slug;
 
         return [
             'id'               => $this->id,
@@ -23,8 +23,8 @@ class BlogResource extends JsonResource
             'excerpt'          => $this->excerpt,
             'summary'          => $this->summary,
             'content'          => $this->when($isDetail, $this->content),
-            'image'            => $this->image ? asset($this->image) : null,
-            'pdf_url'          => $this->pdf_file ? asset($this->pdf_file) : null,
+            'image'            => $this->mediaUrl($this->image),
+            'pdf_url'          => $this->mediaUrl($this->pdf_file),
             'featured'         => (bool) $this->featured,
             'views'            => (int) $this->views,
             'word_count'       => $wordCount,
@@ -45,5 +45,16 @@ class BlogResource extends JsonResource
             'created_by'       => optional($this->createdBy)->name,
             'updated_at'       => $this->updated_at,
         ];
+    }
+
+    private function mediaUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        return asset($path);
     }
 }
