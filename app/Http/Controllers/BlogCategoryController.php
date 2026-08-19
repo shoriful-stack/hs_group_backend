@@ -6,9 +6,9 @@ use App\CustomClass\ReturnMessage;
 use App\DataTables\BlogCategoriesDataTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Blog\BlogCategoryRequest;
+use App\Enums\Status;
 use App\Models\Blog;
 use App\Models\BlogCategory;
-use App\Models\Language;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -20,8 +20,7 @@ class BlogCategoryController extends Controller {
     }
 
     public function create() {
-        $languages = Language::where( 'status', 1 )->pluck( 'name', 'id' );
-        return view( 'blogCategory.create', compact( 'languages' ) );
+        return view( 'blogCategory.create' );
     }
 
     public function store( BlogCategoryRequest $request ) {
@@ -30,8 +29,9 @@ class BlogCategoryController extends Controller {
 
             BlogCategory::create( [
                 'name'            => $request->name,
-                'language_id'     => $request->language_id,
+                'language_id'     => 1,
                 'serial_no'       => $request->serial_no,
+                'status'          => Status::ACTIVE,
                 'seo_title'       => $request->seo_title,
                 'seo_description' => $request->seo_description,
                 'seo_keywords'    => $request->seo_keywords,
@@ -47,8 +47,7 @@ class BlogCategoryController extends Controller {
     }
 
     public function edit( BlogCategory $blogCategory ) {
-        $languages = Language::where( 'status', 1 )->pluck( 'name', 'id' );
-        return view( 'blogCategory.edit', compact( 'blogCategory', 'languages' ) );
+        return view( 'blogCategory.edit', compact( 'blogCategory' ) );
     }
 
     public function show( $id ) {
@@ -61,7 +60,6 @@ class BlogCategoryController extends Controller {
 
             $blogCategory->update( [
                 'name'            => $request->name,
-                'language_id'     => $request->language_id,
                 'serial_no'       => $request->serial_no,
                 'status'          => $request->status,
                 'seo_title'       => $request->seo_title,
@@ -98,6 +96,7 @@ class BlogCategoryController extends Controller {
     {
         try {
             $blogCategory = BlogCategory::query()
+                ->active()
                 ->when($request->q, function ($query) use ($request) {
                     $query->where('name', 'LIKE', '%' . $request->q . '%');
                 })

@@ -4,8 +4,6 @@ namespace App\Http\Requests\Blog;
 
 use App\Enums\Status;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class BlogCategoryRequest extends FormRequest {
@@ -24,8 +22,7 @@ class BlogCategoryRequest extends FormRequest {
     public function rules(): array {
         return [
             'name'            => ['required','string'],
-            'language_id'     => ['nullable', 'numeric'],
-            'status'          => [new Enum( Status::class )],
+            'status'          => ['nullable', new Enum( Status::class )],
             'serial_no'       => ['required', 'string'],
             'seo_title'       => ['nullable', 'string'],
             'seo_description' => ['nullable', 'string'],

@@ -3,28 +3,18 @@
     $(".modal-dialog").addClass('modal-lg');
 </script>
 
-<form action="{{ route('blogCategories.store') }}" method="POST" enctype="multipart/form-data" id="myForm">
+<form action="{{ route('blogCategories.store') }}" method="POST" id="myForm">
     @csrf
     <div class="row">
-        <div class="form-group col-md-6 mb-2">
-            <label for="language_id">{{ __('Language') }} <span class="text-danger">*</span></label>
-            <select name="language_id" id="language_id" class="form-control" required>
-                @foreach($languages as $id => $name)
-                    <option value="{{ $id }}">{{ $name }}</option>
-                @endforeach
-            </select>
-        </div>
-        
-        <div class="form-group col-md-6 mb-2">
-            <label class="control-label" for="serial_no">{{ __('Serial No') }}</label>
-            <input class="form-control" id="serial_no" name="serial_no"  type="number" value="1" />
-        </div>
-
-        <div class="form-group col-md-12 mb-2">
+        <div class="form-group col-md-8 mb-2">
             <label class="control-label" for="name">{{ __('Name') }} <span class="text-danger">*</span></label>
             <input class="form-control" required name="name" type="text" id="name" value="{{ old('name') }}" />
         </div>
 
+        <div class="form-group col-md-4 mb-2">
+            <label class="control-label" for="serial_no">{{ __('Serial No') }}</label>
+            <input class="form-control" id="serial_no" name="serial_no" type="number" value="{{ old('serial_no', 1) }}" />
+        </div>
 
         <div class="form-group col-md-12 mb-2">
             <label class="control-label" for="seo_title">{{ __('SEO Title') }}</label>

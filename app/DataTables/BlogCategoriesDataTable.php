@@ -18,7 +18,6 @@ class BlogCategoriesDataTable extends DataTable {
      */
     public function dataTable( QueryBuilder $query ): EloquentDataTable {
         return ( new EloquentDataTable( $query ) )
-            ->addColumn( 'language', fn( $row ) => @$row->language->name )
             ->editColumn( 'action', fn( $row ) => view( 'blogCategory.action', compact( 'row' ) ) )
             ->editColumn( 'status', fn( $query ) => $query->status?->badge() )
             ->rawColumns( ['action', 'status'] )
@@ -63,7 +62,6 @@ class BlogCategoriesDataTable extends DataTable {
                 ->printable( false )
                 ->width( 60 )
                 ->addClass( 'text-center' ),
-            Column::make( 'language' ),
             Column::make( 'name' ),
             Column::make( 'slug' ),
             Column::make( 'seo_title' ),
