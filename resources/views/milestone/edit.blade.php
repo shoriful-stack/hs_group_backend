@@ -26,6 +26,14 @@
     </div>
 
     <div class="form-group mb-2">
+        <label class="control-label" for="image">{{ __('Choose Image') }}</label>
+        <input class="form-control" id="image" name="image" type="file" accept="image/*" />
+        @if($milestone->image)
+            <img src="{{ asset($milestone->image) }}" alt="{{ $milestone->title }}" height="50" class="mt-2" />
+        @endif
+    </div>
+
+    <div class="form-group mb-2">
         <label class="control-label" for="contents">{{ __('Content') }}</label>
         <textarea name="contents" id="contents" class="form-control">{{ old('contents', $milestone->content) }}</textarea>
     </div>

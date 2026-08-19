@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomClass\Helper;
 use App\CustomClass\ReturnMessage;
 use App\DataTables\MilestoneDataTable;
 use App\Enums\Status;
@@ -15,25 +16,16 @@ use Illuminate\Validation\Rules\Enum;
 
 class MilestoneController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(MilestoneDataTable $milestoneDataTable)
     {
         return $milestoneDataTable->render('milestone.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('milestone.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -42,17 +34,25 @@ class MilestoneController extends Controller
             Validator::make($request->all(), [
                 'title'    => 'required|string|unique:milestones,title',
                 'contents' => 'required|string',
-                'year'  => 'required|string',
-                'serial_no'  => 'required|numeric',
+                'year'     => 'required|string',
+                'serial_no'=> 'required|numeric',
+                'image'    => 'nullable|file|mimes:jpeg,jpg,png,webp|max:4096',
             ])->validate();
 
-            $brand = new Milestone();
-            $brand->title = $request->title;
-            $brand->year = $request->year;
-            $brand->serial_no = $request->serial_no;
-            $brand->content = $request->contents;
-            $brand->save();
+            $image = null;
+            if ($request->hasFile('image')) {
+                $image = Helper::imageUpload($request->file('image'), uniqid(), 'milestone');
+            }
+
+            $milestone = new Milestone();
+            $milestone->title = $request->title;
+            $milestone->year = $request->year;
+            $milestone->serial_no = $request->serial_no;
+            $milestone->content = $request->contents;
+            $milestone->image = $image;
+            $milestone->save();
             Cache::forget('milestones');
+            Cache::forget('milestones_v2');
 
             DB::commit();
             return ReturnMessage::insertSuccess();
@@ -62,46 +62,45 @@ class MilestoneController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Milestone $milestone)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Milestone $milestone)
     {
         return view('milestone.edit', compact('milestone'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Milestone $milestone)
     {
         try {
             DB::beginTransaction();
 
             Validator::make($request->all(), [
-                'title'    => 'nullable|string|unique:brands,title,' . $milestone->id,
-                'contents' => 'nullable|string',
-                'year'  => 'nullable|string',
-                'serial_no'  => 'nullable|numeric',
-                'status'  => new Enum(Status::class),
+                'title'     => 'nullable|string|unique:milestones,title,' . $milestone->id,
+                'contents'  => 'nullable|string',
+                'year'      => 'nullable|string',
+                'serial_no' => 'nullable|numeric',
+                'image'     => 'nullable|file|mimes:jpeg,jpg,png,webp|max:4096',
+                'status'    => new Enum(Status::class),
             ])->validate();
+
+            $image = $milestone->image;
+            if ($request->hasFile('image')) {
+                $image = Helper::imageUpload(
+                    $request->file('image'),
+                    uniqid(),
+                    'milestone',
+                    $milestone->image
+                );
+            }
 
             $milestone->title = $request->title;
             $milestone->year = $request->year;
             $milestone->serial_no = $request->serial_no;
             $milestone->content = $request->contents;
+            $milestone->image = $image;
             $milestone->status = $request->status;
             $milestone->save();
 
             Cache::forget('milestones');
+            Cache::forget('milestones_v2');
 
             DB::commit();
             return ReturnMessage::updateSuccess();
@@ -111,14 +110,12 @@ class MilestoneController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Milestone $milestone)
     {
         try {
             $milestone->delete();
             Cache::forget('milestones');
+            Cache::forget('milestones_v2');
 
             return ReturnMessage::deleteSuccess();
         } catch (QueryException $e) {

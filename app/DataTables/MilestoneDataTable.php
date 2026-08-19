@@ -25,7 +25,7 @@ class MilestoneDataTable extends DataTable
             ->editColumn('image', fn($row) => $row->image ? view('award.thumb', compact('row')) : '')
             ->editColumn('action', fn($row) => view('milestone.action', compact('row')))
             ->editColumn('status', fn($query) => $query->status?->badge())
-            ->rawColumns(['action', 'status'])
+            ->rawColumns(['action', 'status', 'image'])
             ->setRowId('id');
     }
 
@@ -72,6 +72,7 @@ class MilestoneDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('title'),
             Column::make('year'),
+            Column::make('image'),
             Column::make('serial_no'),
             Column::make('content'),
             Column::make('status'),

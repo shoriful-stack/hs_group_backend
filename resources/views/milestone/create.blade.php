@@ -21,6 +21,11 @@
         </div>
     </div>
 
+    <div class="form-group mb-2" id="imageField">
+        <label class="control-label" for="image">{{ __('Choose Image') }}</label>
+        <input class="form-control" id="image" name="image" type="file" accept="image/*" />
+    </div>
+
     <div class="form-group mb-2" id="">
         <label class="control-label" for="contents">{{ __('Content') }} <span class="text-danger">*</span></label>
         <textarea name="contents" id="contents" class="form-control"></textarea>
