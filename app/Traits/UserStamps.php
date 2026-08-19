@@ -30,8 +30,8 @@ trait UserStamps
         });
 
         static::updating(function ($model) {
-            if (Schema::hasColumn($model->getTable(), 'updated_by')) {
-                $model->updated_by = Auth::user()->id;
+            if (Auth::check() && Schema::hasColumn($model->getTable(), 'updated_by')) {
+                $model->updated_by = Auth::id();
             }
         });
 
@@ -41,7 +41,7 @@ trait UserStamps
                     $model->deleted_by = $userId;
                 }
                 if (Schema::hasColumn($model->getTable(), 'updated_by')) {
-                    $model->updated_by = Auth::user()->id;
+                    $model->updated_by = $userId;
                 }
 
                 if (method_exists($model, 'runSoftDelete')) {
